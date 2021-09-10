@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppState, ItemType } from '../../redux/types/types';
 import { Item } from '../../components/Item/Item';
 import { getSearchItems, pageChange } from "../../redux/items/itemsActions";
-import Alert from '../../components/Alert/Alert';
 import { Footer } from '../../components/Footer/Footer';
 
 
@@ -34,7 +33,6 @@ const Items: React.FC<ItemsProps> = ({ }) => {
   return (
     <div className="Items">
       <div className="main_container">
-        <Alert />
         {items.map((item: ItemType) => (
           <Item item={item} key={item.objectID} />
         ))}

@@ -42,17 +42,8 @@ export const getSearchItems = (searchQuery: string, pageNum: number) => async (d
   try {
     const res: AxiosResponse = await axios.get(URL);
     dispatch({ type: actionTypes.GET_SEARCH_ITEMS, payload: res.data.hits });
+    dispatch({ type: actionTypes.CLEAR_ITEM_DETAILS_COMMENTS })
     dispatch(setAlert("Successfully fetched items", "success"));
-
-    // axios.get(URL).then((data) => {
-    //   setResult(data.data.hits);
-    //   let temp: MiscStats = {
-    //     number: data.data.nbHits,
-    //     timeTaken: data.data.processingTimeMS / 1000,
-    //     totalPage: data.data.nbPages,
-    //   };
-    //   setSearchStat(temp);
-    // });
   } catch (err: any) {
     console.log(err.message);
     console.error(err);
@@ -60,7 +51,11 @@ export const getSearchItems = (searchQuery: string, pageNum: number) => async (d
   }
 };
 
-
+/**
+ * 
+ * @param objectID The router param ID
+ * @returns void
+ */
 export const loadStory = (objectID: string) => async (dispatch: any) => {
   try {
     let currItem;
@@ -83,7 +78,11 @@ export const loadStory = (objectID: string) => async (dispatch: any) => {
   }
 }
 
-
+/**
+ * 
+ * @param kids Comments string array
+ * @returns Comment Objects or null
+ */
 const initComments = async (kids: string[]) => {
   try {
     const promises = kids.map((kid) => axios.get(`https://hacker-news.firebaseio.com/v0/item/${kid}.json`).then((response) => response.data));
@@ -95,11 +94,16 @@ const initComments = async (kids: string[]) => {
   }
 };
 
-const loadFromService = async (storyID: string | number) => {
+/**
+ * 
+ * @param objectID The router param ID
+ * @returns Item from service or null
+ */
+const loadFromService = async (objectID: string | number) => {
   try {
-    const URL = `https://hacker-news.firebaseio.com/v0/item/${storyID}.json`
+    const URL = `https://hacker-news.firebaseio.com/v0/item/${objectID}.json`
     const res = await axios.get(URL);
-    if (storyID) localStorage.setItem(storyID.toString(), JSON.stringify(res.data));
+    if (objectID) localStorage.setItem(objectID.toString(), JSON.stringify(res.data));
     return res.data;
   } catch (err) {
     console.log(err);
@@ -107,8 +111,13 @@ const loadFromService = async (storyID: string | number) => {
   }
 }
 
-const loadFromStorage = (storyID: string | number) => {
-  const JSONString = window.localStorage.getItem(storyID.toString());
+/**
+ * 
+ * @param objectID The router param ID
+ * @returns Item from localStorage or null
+ */
+const loadFromStorage = (objectID: string | number) => {
+  const JSONString = window.localStorage.getItem(objectID.toString());
   if (JSONString) {
     const item = JSON.parse(JSONString);
     return item;
